@@ -145,3 +145,59 @@ plt.show()
 ### Compare the results
 
 When manually implemented, slic seems to not produce results as accurately as using built-in function. 
+
+## Task 2:
+
+Reference by [kazuto](https://github.com/kazuto1011/grad-cam-pytorch)
+Copied the Requirements, Basic Usage part
+
+### Requirements
+
+Python 2.7 / 3.+
+
+```bash
+$ pip install click opencv-python matplotlib tqdm numpy
+$ pip install "torch>=0.4.1" torchvision
+```
+
+### Basic Usage
+
+```sh
+python main.py [DEMO_ID] [OPTIONS]
+```
+
+Demo ID:
+
+* [`demo1`](#demo-1)
+* [`demo2`](#demo-2)
+* [`demo3`](#demo-3)
+
+Options:
+
+* ```-i```, ```--image-paths```: image path, which can be provided multiple times (required)
+* ```-a```, ```--arch```: a model name from ```torchvision.models```, e.g. "resnet152" (required)
+* ```-t```, ```--target-layer```: a module name to be visualized, e.g. "layer4.2" (required)
+* ```-k```, ```--topk```: the number of classes to generate (default: 3)
+* ```-o```, ```--output-dir```: a directory to store results (default: ./results)
+* ```--cuda/--cpu```: GPU or CPU
+
+The command above generates, for top *k* classes:
+
+* Gradients by vanilla backpropagation
+* Gradients by guided backpropagation [[2](##references)]
+* Gradients by deconvnet [[2](##references)]
+* Grad-CAM [[1](##references)]
+* Guided Grad-CAM [[1](##references)]
+
+The guided-* do not support `F.relu` but only `nn.ReLU` in this codes.
+For instance, off-the-shelf `inception_v3` cannot cut off negative gradients during backward operation (issue #2).
+
+### Demo 1
+
+![](chipmunk.jpg)
+
+Generate visualization maps given a torchvision model, a target layer, and images.
+
+```bash
+python main.py demo1 -a resnet152 -t layer4 -i C:\Users\ADMINS\Downloads\chipmunk.jpg
+```
